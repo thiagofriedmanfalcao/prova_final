@@ -1,6 +1,8 @@
 package Financeiro;
 
-public class Pessoas{
+import java.util.Objects;
+
+public class Pessoas {
     int idPessoa;
     String nome;
     String email;

@@ -1,6 +1,8 @@
 package Financeiro;
 
-public class Contas{
+import java.util.Objects;
+
+public class Contas {
     int idConta;
     int mesConta;
     int anoConta;
