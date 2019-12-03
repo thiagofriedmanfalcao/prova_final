@@ -3,7 +3,7 @@ package Financeiro;
 import java.util.Objects;
 
 public class Pessoas {
-    int idPessoa;
+    int idPessoa = 1;
     String nome;
     String email;
 
@@ -73,11 +73,7 @@ public class Pessoas {
 
     @Override
     public String toString() {
-        return "{" +
-            " idPessoa='" + getIdPessoa() + "'" +
-            ", nome='" + getNome() + "'" +
-            ", email='" + getEmail() + "'" +
-            "}";
+        return "Nome: " + getNome() + " Email: " + getEmail();
     }
       
 }
