@@ -73,7 +73,7 @@ public class Pessoas {
 
     @Override
     public String toString() {
-        return "Nome: " + getNome() + " Email: " + getEmail();
+        return "Id: " + getIdPessoa() + " Nome: " + getNome() + " Email: " + getEmail();
     }
       
 }

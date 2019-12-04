@@ -18,7 +18,7 @@ public class Dividas extends Contas{
         this.objPessoas = objPessoas;        
     }
 
-    private double calculaDesconto(){
+	private double calculaDesconto(){
         return super.getVlrConta() - this.getPercentualDesconto();
     }    
 

@@ -3,7 +3,7 @@ package Financeiro;
 import java.util.Objects;
 
 public class Contas {
-    protected int idConta = 1;
+    protected int idConta;
     protected int mesConta;
     protected int anoConta;
     protected double vlrConta;

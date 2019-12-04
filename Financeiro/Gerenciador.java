@@ -4,9 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Map.Entry;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class Gerenciador {
-    public static void main(String[] args) {
+    static Connection conexao;
+    public static void main(String[] args) throws Exception {   
+
+        System.out.println("Iniciando o Banco de Dados");        
+        conexao = Conexao.getConnection();        
+        System.out.println("Conexão feita");
+
         Scanner scanner = new Scanner(System.in);
         Map<Integer, Pessoas> pessoas = new HashMap<>();
         Map<Integer, Dividas> dividas = new HashMap<>();
@@ -28,7 +37,7 @@ public class Gerenciador {
                     cadastrarProventos(scanner, pessoas, proventos);
                     break;
                 case 4:
-                    imprimirObjeto(pessoas);
+                    Conexao.findPeople(conexao);
                     break;
                 case 5:
                     imprimirObjeto(dividas);
@@ -37,6 +46,7 @@ public class Gerenciador {
                     imprimirObjeto(proventos);
                     break;
                 case 7:
+                    conexao.close();
                     System.out.println("Até o próximo semestre!");
                     return;
                 default:
@@ -60,24 +70,27 @@ public class Gerenciador {
         System.out.println("7 - Sair");
     }
 
-    private static void cadastrarPessoa(Scanner scanner, Map<Integer,Pessoas> pessoas){
+    private static void cadastrarPessoa(Scanner scanner, Map<Integer,Pessoas> pessoas) throws Exception {
         Pessoas pessoa = new Pessoas();
         System.out.println("Digite o Nome: ");
         pessoa.setNome(scanner.next());
         System.out.println("Digite o Email: ");
         pessoa.setEmail(scanner.next());
 
-        Integer identificador;
+        Integer idPessoa;        
         if (pessoas.size() == 0) {
-            identificador = 1;
+            idPessoa = 1;
         } else {
-            identificador = pessoas.size() + 1;
+            idPessoa = pessoas.size() + 1;
         }
 
-        pessoas.put(identificador, pessoa);
+        pessoa.setIdPessoa(idPessoa);
+
+        pessoas.put(idPessoa, pessoa);
+        Conexao.insertPeople(conexao, idPessoa, pessoa.getNome(), pessoa.getEmail());
     }
 
-    private static void cadastrarDivida(Scanner scanner, Map<Integer,Pessoas> pessoas, Map<Integer,Dividas> dividas){
+    private static void cadastrarDivida(Scanner scanner, Map<Integer,Pessoas> pessoas, Map<Integer,Dividas> dividas) throws Exception {
         Pessoas pessoa = (Pessoas) retornaObjeto(pessoas, "Digite o código da pessoa: ", scanner);
 
         Dividas divida = new Dividas();
@@ -91,10 +104,19 @@ public class Gerenciador {
         divida.setPercentualDesconto(scanner.nextDouble());
         divida.setObjPessoas(pessoa);
 
-        dividas.put(dividas.size(), divida);
+        Integer idDivida;
+        if (dividas.size() == 0) {
+            idDivida = 1;
+        } else {
+            idDivida = dividas.size() + 1;
+        }
+
+        dividas.put(idDivida, divida);
+
+        Conexao.insertDebt(conexao, idDivida, divida.getAnoConta(), divida.getMesConta(), divida.getVlrConta(), divida.getPercentualDesconto(), pessoa.idPessoa);
     }
 
-    private static void cadastrarProventos(Scanner scanner, Map<Integer,Pessoas> pessoas, Map<Integer,Proventos> proventos){
+    private static void cadastrarProventos(Scanner scanner, Map<Integer,Pessoas> pessoas, Map<Integer,Proventos> proventos) throws Exception {
         Pessoas pessoa = (Pessoas) retornaObjeto(pessoas, "Digite o código da pessoa: ", scanner);
 
         Proventos provento = new Proventos();
@@ -108,7 +130,16 @@ public class Gerenciador {
         provento.setImposto(scanner.nextDouble());
         provento.setObjPessoas(pessoa);
 
-        proventos.put(proventos.size(), provento);
+        Integer idProvento;
+        if (proventos.size() == 0) {
+            idProvento = 1;
+        } else {
+            idProvento = proventos.size() + 1;
+        }        
+
+        proventos.put(idProvento, provento);
+
+        Conexao.insertSalary(conexao, idProvento, provento.getAnoConta(), provento.getMesConta(), provento.getVlrConta(), provento.getImposto(), pessoa.idPessoa);
     }        
 
     private static void imprimirObjeto(Map<Integer, ?> map){
