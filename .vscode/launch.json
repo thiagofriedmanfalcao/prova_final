@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Gerenciador",
+            "request": "launch",
+            "mainClass": "Financeiro.Gerenciador",
+            "projectName": "prova_final_8568b8bb"
+        }
+    ]
+}
